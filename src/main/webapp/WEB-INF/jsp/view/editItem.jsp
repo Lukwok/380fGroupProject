@@ -6,10 +6,19 @@
     </head>
     <body>        
         <a href="<c:url value="/system/item?productId=${productId}" />">Back</a><br />
+        <form:form method="POST" enctype="multipart/form-data"
+                   modelAttribute="attachmentForm"> 
         <h1>Product description(${products[productId]})</h1>
-        Item description:${itemdesciption[productId][0]}<br/>
-        Item price:${itemdesciption[productId][1]}<br/>
-        Availability:${itemdesciption[productId][2]}<br/><br/>
+        Item description:<br>
+       <form:textarea path="description" rows="5" cols="30" /><br/><br/>
+        Item price:<br>
+        <form:input path="price" type="text" ></form:input><br><br>
+        Availability:
+        <form:select  path="availability">
+            <form:option value="Yes">Yes</form:option>
+            <form:option value="No">No</form:option>
+        </form:select>
+        <br><br>
         Image of the product: <br>
         <ul>
         <c:forEach items="${imageDatabase}" var="image">
@@ -24,19 +33,19 @@
         Comments from registered users:<br/>
         ${itemdesciption[productId][3]}<br/><br/>
 
-           <form:form method="POST" enctype="multipart/form-data"
-           modelAttribute="attachmentForm"> 
+               =============================================================================================== 
+               <br>
                 <label for="attachments">Upload Item Image:</label>
-                <input type="file" name="attachments" multiple="multiple"accept="image/*"/><br/><br/>
+                <input type="file" name="attachments" multiple="multiple"accept="image/*"/><br/>
                 <input id="itemid" name="itemid"   input="number" value="${productId}" hidden="true" readonly><br>
-                <input type="submit" value="Upload">
-            </form:form>
-            <div>
-                <br/>
-                <label>Your chosen image:</label>
-                <p id="filename">
-                </p>
-            </div>
+                <div>
+                    <label>Your chosen image:</label>
+                    <p id="filename">
+                    </p>
+                </div>
+                <br>
+                <input type="submit" value="Save">
+    </form:form>
 
     </body>
     
