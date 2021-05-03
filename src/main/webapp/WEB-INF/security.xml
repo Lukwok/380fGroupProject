@@ -30,7 +30,6 @@
         <intercept-url pattern="/system/edit/**" access="hasRole('ADMIN')" />
         <intercept-url pattern="/system/viewcart/**" access="hasAnyRole('USER','ADMIN')" />
         <intercept-url pattern="/system/favouritepage/**" access="hasAnyRole('USER','ADMIN')" />
-        <intercept-url pattern="/system/setavailability/**" access="hasRole('ADMIN')" />
         <intercept-url pattern="/reg/edit/**" access="hasAnyRole('USER','ADMIN')" />
         <intercept-url pattern="/reg/manage/**" access="hasRole('ADMIN')" />
         <form-login login-page="/login" authentication-failure-url="/login?error" />
