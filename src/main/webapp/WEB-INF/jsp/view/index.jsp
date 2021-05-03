@@ -39,9 +39,6 @@
                     <security:authorize access="hasAnyRole('ADMIN','USER')">
                     <th>Favourite</th>
                     </security:authorize>
-                    <security:authorize access="hasRole('ADMIN')">
-                    <th>Set availability(Admin only)</th>
-                    </security:authorize> 
             </tr>    
             <c:forEach var="product" items="${products}">
                 <tr>
@@ -64,17 +61,6 @@
                                    <c:param name="setfavourite" value="Del" />
                                    <c:param name="productId" value="${product.key}" />
                                </c:url>">Delete</a
-                        </td>
-                    </security:authorize>
-                    <security:authorize access="hasRole('ADMIN')">
-                        <td><a href="<c:url value="/system/setavailability">
-                                   <c:param name="setavailability" value="Yes" />
-                                   <c:param name="productId" value="${product.key}" />
-                               </c:url>">Yes/</a>
-                            <a href="<c:url value="/system/setavailability">
-                                   <c:param name="setavailability" value="No" />
-                                   <c:param name="productId" value="${product.key}" />
-                               </c:url>">No</a
                         </td>
                     </security:authorize>
                 </tr>
