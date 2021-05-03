@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
 import com.mycompany.model.Photo;
 import com.mycompany.service.AttachmentService;
-import com.mycompany.view.DownloadingView;
+import static java.lang.Integer.parseInt;
 import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +49,7 @@ public class SystemController {
     public static class Form {
 
         private String addComment;
+        
 
         public String getAddComment() {
             return addComment;
@@ -59,11 +58,13 @@ public class SystemController {
         public void setAddComment(String addComment) {
             this.addComment = addComment;
         }
-
        }
     
     public static class ItemForm {
         private String itemid;
+        private String description;
+        private String price;
+        private String availability;
         private List<MultipartFile> attachments;
 
         public String getItemid() {
@@ -81,8 +82,31 @@ public class SystemController {
         public void setAttachments(List<MultipartFile> attachments) {
             this.attachments = attachments;
         }
-        
-        
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
+        }
+
+        public String getAvailability() {
+            return availability;
+        }
+
+        public void setAvailability(String availability) {
+            this.availability = availability;
+        }
+
     }
 
 
@@ -104,22 +128,6 @@ public class SystemController {
         }
 
         return "index";
-    }
-
-    @GetMapping(value = {"", "/setavailability"})
-    public String Setavailability(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int productId;
-        productId = Integer.parseInt(request.getParameter("productId"));
-        String setavailability = request.getParameter("setavailability");
-        if (setavailability != null) {
-            if (setavailability.equals("Yes")) {
-                itemdesciption[productId][2] = "Yes";
-            } else {
-                itemdesciption[productId][2] = "No";
-            }
-
-        }
-        return "setavailability";
     }
 
     @GetMapping(value = {"", "/favouritepage"})
@@ -240,20 +248,34 @@ public class SystemController {
     public ModelAndView edit(ModelMap model, HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         int productId;
+        ModelAndView modelAndView = new ModelAndView("editItem");
+        ItemForm itemForm = new ItemForm();
         productId = Integer.parseInt(request.getParameter("productId"));
-
+        
+        itemForm.setDescription(itemdesciption[productId][0]);
+        itemForm.setPrice(itemdesciption[productId][1]);
+        itemForm.setAvailability(itemdesciption[productId][2]);
+        
+        modelAndView.addObject("attachmentForm", itemForm);
+        
         model.addAttribute("productId", productId);
         model.addAttribute("products", products);
-        model.addAttribute("itemdesciption", itemdesciption);
+//        model.addAttribute("itemdesciption", itemdesciption);
         model.addAttribute("imageDatabase",attachmentService.getAttachments(new Long(productId)));
-        return new ModelAndView("editItem", "attachmentForm", new ItemForm());
+        return modelAndView;
     }
     
     @PostMapping(value = {"", "/edit"})
     public String updateItem(Principal principal, ModelMap model, ItemForm form,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         long item_id = Long.parseLong(form.getItemid());
-        attachmentService.updateAttachment(item_id, form.getAttachments());
+        if (!form.getAttachments().isEmpty()){
+            attachmentService.updateAttachment(item_id, form.getAttachments());
+        }
+        //Update the Model Map PART
+        itemdesciption[Integer.parseInt(form.getItemid())][0] = form.getDescription();
+        itemdesciption[Integer.parseInt(form.getItemid())][1] = form.getPrice();
+        itemdesciption[Integer.parseInt(form.getItemid())][2] = form.getAvailability();
         return "redirect:/system/edit?productId="+item_id;
     }
     
@@ -265,14 +287,25 @@ public class SystemController {
     }
     
     @GetMapping("/item/{itemId}/attachment/{attachment:.+}")
-    public View download(@PathVariable("itemId") long itemId,
-            @PathVariable("attachment") String name) {
-        Photo attachment = attachmentService.getAttachment(itemId, name);
-        if (attachment != null) {
-            return new DownloadingView(attachment.getName(),
-                    attachment.getMimeContentType(), attachment.getContents());
-        }
-        return new RedirectView("/system/index", true);
-    }
+//    public View download(@PathVariable("itemId") long itemId,
+//            @PathVariable("attachment") String name) {
+//        Photo attachment = attachmentService.getAttachment(itemId, name);
+//        if (attachment != null) {
+//            return new DownloadingView(attachment.getName(),
+//                    attachment.getMimeContentType(), attachment.getContents());
+//        }
+//        return new RedirectView("/system/index", true);
+//    }
+    
+   public void showImage(
+           @PathVariable("itemId") long itemId,  @PathVariable("attachment") String name, 
+           HttpServletResponse response,HttpServletRequest request)
+                throws IOException{
 
+            Photo attachment = attachmentService.getAttachment(itemId, name);      
+            response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+            response.getOutputStream().write(attachment.getContents());
+            
+            response.getOutputStream().close();
+           }
 }
