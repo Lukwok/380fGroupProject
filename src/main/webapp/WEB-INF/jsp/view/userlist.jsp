@@ -34,8 +34,12 @@
                             </td>
                             <td>
                                 [<a href="<c:url value="/reg/manage/delete/${user.username}" />">Delete</a>]
-                                [<a href="<c:url value="/reg/manage/edit/${user.username}" />">Edit</a>]
+                                [<a href="<c:url value="/reg/manage/edituser/${user.username}" />">Edit</a>]
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
+            </c:otherwise>
+        </c:choose>
+    </body>
+</html>

@@ -26,6 +26,7 @@
         </security:authorize>
         <security:authorize access="hasRole('ADMIN')">
             <a href="<c:url value="/reg/manage" />">Manage User</a>
+            <a href="<c:url value="/system/additem" />">Add Item</a>
         </security:authorize>
         <br /><br /> 
         </security:authorize>

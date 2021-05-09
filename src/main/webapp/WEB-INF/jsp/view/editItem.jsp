@@ -24,14 +24,25 @@
         <c:forEach items="${imageDatabase}" var="image">
             <li>
             <a href="<c:url value="/system/item/${productId}/attachment/${image.name}" />">
-             <c:out value="${image.name}" /></a> [<a href="<c:url
-                            value="/system/edit/${productId}/delete/${image.id}"
-                            />">Delete</a>]
+             <c:out value="${image.name}" />
+            </a> 
+             [<a href="<c:url value="/system/edit/${productId}/delete/${image.id}"/>">Delete</a>]
              </li>
         </c:forEach>
         </ul><br>
         Comments from registered users:<br/>
-        ${itemdesciption[productId][3]}<br/><br/>
+        <c:if test="${comments[0] != ''}">
+            <c:forEach items="${comments}" var="comment" varStatus="idxStatus">
+                ${comment}
+
+                [<a href="<c:url value="/system/edit/${productId}/deletecm/${idxStatus.index}"/>">Delete</a>]
+
+                <br/>
+            
+            </c:forEach>
+        </c:if>
+        
+        <br/><br/>
 
                =============================================================================================== 
                <br>
@@ -44,6 +55,10 @@
                     </p>
                 </div>
                 <br>
+                
+                [<a href="<c:url value="/system/edit/${productId}/deleteitem"/>">Delete</a>]
+                <br/>
+                <br/>
                 <input type="submit" value="Save">
     </form:form>
 
