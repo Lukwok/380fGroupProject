@@ -16,6 +16,15 @@ CREATE TABLE user_roles (
     FOREIGN KEY (username) REFERENCES users(username)
 );
 
+CREATE TABLE photo(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    filename VARCHAR(255) DEFAULT NULL,
+    content_type VARCHAR(255) DEFAULT NULL,
+    content BLOB DEFAULT NULL,
+    item_id INTEGER DEFAULT NULL,
+    PRIMARY KEY (id),
+);
+
 INSERT INTO users VALUES ('keith', '{noop}keithpw');
 INSERT INTO user_roles(username, role) VALUES ('keith', 'ROLE_USER');
 INSERT INTO user_roles(username, role) VALUES ('keith', 'ROLE_ADMIN');
