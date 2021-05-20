@@ -1,6 +1,10 @@
 CREATE TABLE users (
     username VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
+    phone VARCHAR(8) DEFAULT NULL,
+    fullname VARCHAR(255) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
+    
     PRIMARY KEY (username)
 );
 
